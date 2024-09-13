@@ -7,11 +7,8 @@ const sentry = require('./libs/sentry');
 const processEntries = async (event, message, entries) => {
   await Object.values(entries).reduce(async (lastPromise, entry) => {
     const accum = await lastPromise;
-    const { tag, path_display } = entry;
-    if (tag === 'deleted') {
-      await File.deleteMany({ path_display });
-      await Feature.deleteMany({ 'meta.pathDisplay': path_display });
-    } else if (tag === 'file') {
+    const { tag } = entry;
+    if (tag === 'file') {
       const messageObject = {
         ...event,
         body: JSON.stringify(entry),
